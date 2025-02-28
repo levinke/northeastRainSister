@@ -1,0 +1,78 @@
+body { padding: 0; margin: 0 }
+#unity-container { position: absolute }
+#unity-container.unity-desktop { left: 50%; top: 50%; transform: translate(-50%, -50%) }
+#unity-container.unity-mobile { width: 100%; height: 100% }
+#unity-canvas { background: #231F20 }
+.unity-mobile #unity-canvas { width: 100%; height: 100% }
+#unity-loading-bar { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: none }
+#unity-logo { width: 154px; height: 130px; background: url('unity-logo-dark.png') no-repeat center }
+#unity-progress-bar-empty { width: 141px; height: 18px; margin-top: 10px; margin-left: 6.5px; background: url('progress-bar-empty-dark.png') no-repeat center }
+#unity-progress-bar-full { width: 0%; height: 18px; margin-top: 10px; background: url('progress-bar-full-dark.png') no-repeat center }
+#unity-footer { position: relative }
+.unity-mobile #unity-footer { display: none }
+#unity-webgl-logo { float:left; width: 204px; height: 38px; background: url('webgl-logo.png') no-repeat center }
+#unity-build-title { float: right; margin-right: 10px; line-height: 38px; font-family: arial; font-size: 18px }
+#unity-fullscreen-button { float: right; width: 38px; height: 38px; background: url('fullscreen-button.png') no-repeat center }
+#unity-warning { position: absolute; left: 50%; top: 5%; transform: translate(-50%); background: white; padding: 10px; display: none }
+
+#preload {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(29, 29, 29);
+    /* background-image: url(splash.png); */
+  }
+  
+  #preload img {
+    /* 使图片绝对定位 */
+    position: absolute;
+    /* 垂直居中 */
+    top: -50%;
+    /* 水平居中 */
+    left: 50%;
+    /* 使其中心点在容器中心 */
+    transform: translate(-50%, -50%);
+    /* 按比例缩放，保持图片完整 */
+    object-fit: cover;
+  }
+  
+  #logo {
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.5);
+    object-fit: cover;
+    height: 292px;
+    width: 599px;
+    background-image: url(logo.png);
+  }
+  
+  #progress {
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.5);
+    object-fit: cover;
+    height: 54px;
+    width: 747px;
+    background-image: url(loading_bg0.png);
+  }
+  
+  #gameTitle {
+    font-size: 32px;
+    transform: translateY(-30px);
+    color: #ffffff;
+    font-weight: bold;
+    -webkit-text-stroke-width: 2px;
+    -webkit-text-stroke-color: black;
+    -webkit-text-fill-color: white;
+  }
+  
+  #loading {
+    position: absolute;
+    transform: translateY(-38px);
+    height: 54px;
+    width: 0px;
+    background-image: url(loading_bg1.png);
+  }
+  
