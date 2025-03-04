@@ -1,169 +1,93 @@
 <!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity WebGL Player | h5build1</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
-  </head>
-  <body>
-    <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width=750 height=1334></canvas>
-      <div id="unity-loading-bar">
-        <div id="unity-logo"></div>
-        <div id="unity-progress-bar-empty">
-          <div id="unity-progress-bar-full"></div>
-        </div>
-      </div>
-      <div id="unity-warning"> </div>
-      <div id="unity-footer">
-        <div id="unity-webgl-logo"></div>
-        <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">h5build1</div>
-      </div>
+<html>
 
-      <div id="preload"> </div>
-      <div id="logo"></div>
-      <div id="progress" class="progress-bar stripes">
-        <div id="gameTitle">FCNETGAMES....</div>
-        <div id="loading"></div>
-      </div>
+<head>
+  <meta charset="utf-8">
 
+  <title>
+    battleRoyale
+  </title>
+
+  <!--http://www.html5rocks.com/en/mobile/mobifying/-->
+  <meta name="viewport"
+    content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1,minimal-ui=true" />
+
+  <!--https://developer.apple.com/library/safari/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+
+  <!-- force webkit on 360 -->
+  <meta name="renderer" content="webkit" />
+  <meta name="force-rendering" content="webkit" />
+  <!-- force edge on IE -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="msapplication-tap-highlight" content="no">
+
+  <!-- force full screen on some browser -->
+  <meta name="full-screen" content="yes" />
+  <meta name="x5-fullscreen" content="true" />
+  <meta name="360-fullscreen" content="true" />
+
+  <!--fix fireball/issues/3568 -->
+  <!--<meta name="browsermode" content="application">-->
+  <meta name="x5-page-mode" content="app">
+
+  <!--<link rel="apple-touch-icon" href=".png" />-->
+  <!--<link rel="apple-touch-icon-precomposed" href=".png" />-->
+
+  <link rel="stylesheet" type="text/css" href="style.f76d1.css" />
+  <script src="https://unpkg.com/@tonconnect/ui@2.0.2/dist/tonconnect-ui.min.js"></script>
+<!--  <script defer data-domain="app.tonmaster.xyz" src="https://plausible.io/js/script.js"></script>-->
+<!--  <script defer data-domain="app.tonmaster.xyz" src="https://plausible.io/js/script.tagged-events.js"></script>-->
+  <script src="https://js-de.sentry-cdn.com/82cf301e3ded861abf085269a6028dd7.min.js"crossorigin="anonymous"></script>
+  <script defer data-domain="tonmaster" src="http://log.href.style/js/script.js"></script>
+  <script>window.plausible = window.plausible || function () { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
+  <script defer data-domain="tm-test.bestchart.xyz" src="https://log.bestchart.xyz/js/script.js"></script>
+
+</head>
+
+<body>
+  <script type="text/javascript">
+    window['__tonConnectUI'] = new TON_CONNECT_UI.TonConnectUI({
+      manifestUrl: 'https://tm-test.bestchart.xyz/tonconnect-manifest.json'
+    });
+    window['__tonConnectUI'].onStatusChange(function (walletAndwalletInfo) {
+      console.log("onStatusChange: ", walletAndwalletInfo)
+      window['__walletInfo'] = walletAndwalletInfo;
+    });
+  </script>
+  <div id="GameDiv" cc_exact_fit_screen="true">
+    <div id="Cocos3dGameContainer">
+      <canvas id="GameCanvas" oncontextmenu="event.preventDefault()" tabindex="0"></canvas>
     </div>
-    <script>
-      var container = document.querySelector("#unity-container");
-      var canvas = document.querySelector("#unity-canvas");
-      var loadingBar = document.querySelector("#unity-loading-bar");
-      var progressBarFull = document.querySelector("#unity-progress-bar-full");
-      var fullscreenButton = document.querySelector("#unity-fullscreen-button");
-      var warningBanner = document.querySelector("#unity-warning");
+  </div>
+  
+<script src="./vconsole.min.js"></script>
+<script type="text/javascript">
+    // open web debugger console
+    window.VConsole && (window.vConsole = new VConsole());
+</script>
 
-      // Shows a temporary message banner/ribbon for a few seconds, or
-      // a permanent error message on top of the canvas if type=='error'.
-      // If type=='warning', a yellow highlight color is used.
-      // Modify or remove this function to customize the visually presented
-      // way that non-critical warnings and error messages are presented to the
-      // user.
-      function unityShowBanner(msg, type) {
-        function updateBannerVisibility() {
-          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-        }
-        var div = document.createElement('div');
-        div.innerHTML = msg;
-        warningBanner.appendChild(div);
-        if (type == 'error') div.style = 'background: red; padding: 10px;';
-        else {
-          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-          setTimeout(function() {
-            warningBanner.removeChild(div);
-            updateBannerVisibility();
-          }, 5000);
-        }
-        updateBannerVisibility();
-      }
 
-      var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/web.loader.js";
-      var config = {
-        dataUrl: buildUrl + "/web.data.unityweb",
-        frameworkUrl: buildUrl + "/web.framework.js.unityweb",
-        codeUrl: buildUrl + "/web.wasm.unityweb",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "DefaultCompany",
-        productName: "h5build1",
-        productVersion: "0.1",
-        showBanner: unityShowBanner,
-      };
+<!-- Polyfills bundle. -->
 
-      // By default Unity keeps WebGL canvas render target size matched with
-      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
-      // Set this to false if you want to decouple this synchronization from
-      // happening inside the engine, and you would instead like to size up
-      // the canvas DOM size and WebGL render target sizes yourself.
-      // config.matchWebGLToCanvasSize = false;
+<script src="src/polyfills.bundle.5adbf.js" charset="utf-8"> </script>
 
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile device style: fill the whole browser client area with the game canvas:
 
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-        document.getElementsByTagName('head')[0].appendChild(meta);
-        container.className = "unity-mobile";
+<!-- SystemJS support. -->
+<script src="src/system.bundle.543e6.js" charset="utf-8"> </script>
 
-        // To lower canvas resolution on mobile devices to gain some
-        // performance, uncomment the following line:
-        // config.devicePixelRatio = 1;
+<!-- Import map -->
+<script src="src/import-map.cd0ef.json" type="systemjs-importmap" charset="utf-8"> </script>
 
-        canvas.style.width = window.innerWidth + 'px';
-        canvas.style.height = window.innerHeight + 'px';
+<script>
+    System.import('./index.8bb7e.js').catch(function(err) { console.error(err); })
+</script>
 
-        unityShowBanner('WebGL builds are not supported on mobile devices.');
-      } else {
-        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
+  <script type="text/javascript">
+    window['__vconsole'] && (window['__vconsole'].style.display = 'none');
+  </script>
+</body>
 
-        canvas.style.width = "750px";
-        canvas.style.height = "1334px";
-      }
-
-      loadingBar.style.display = "block";
-
-      ////
-      let preload = document.getElementById('preload');
-      const img = document.createElement('img');
-      img.style.objectFit = "cover";
-      img.src = 'splash.png';
-      // 判断窗口宽高比
-      let heigh = window.innerHeight;
-      let w = window.innerWidth;
-      img.style.height = heigh + "px"
-      img.style.width = w + "px";
-      preload.appendChild(img);
-      preload.style.display = 'block';
-      let left = document.getElementById('left');
-      let right = document.getElementById('right');
-      let logo = document.getElementById('logo');
-      logo.style.display = 'block';
-      let progress = document.getElementById('progress');
-      progress.style.display = 'block';
-      let loading = document.getElementById('loading');
-      let _val = 0;
-      let lp = 0.001;
-      // for (let i = 0; i < (10 * 100); i++) {
-      //   let val = (lp - lp / 10) * i;
-      //   setTimeout(() => {
-      //     if (val >= _val) {
-      //       _val = val;
-      //       loading.style.width = 747 * val + "px";
-      //     }
-      //   }, i * 100);
-      // }
-      ////
-
-      var script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
-          progressBarFull.style.width = 100 * progress + "%";
-          loading.style.width = 747 * progress + "px";
-        }).then((unityInstance) => {
-          loadingBar.style.display = "none";
-          fullscreenButton.onclick = () => {
-            unityInstance.SetFullscreen(1);
-          };
-          loading.style.width = 747 * 1 + "px";
-          logo.style.display = 'none';
-          progress.style.display = 'none';
-          preload.style.display = 'none';
-          warningBanner.style.display = 'none';
-        }).catch((message) => {
-          alert(message);
-        });
-      };
-      document.body.appendChild(script);
-
-      
-    </script>
-  </body>
 </html>
